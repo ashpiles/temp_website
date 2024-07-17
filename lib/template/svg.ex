@@ -1,30 +1,45 @@
 defmodule SVG do
-  alias SVG.Path.Seg, as: Seg
+  use GenServer
   alias SVG.Path, as: Path
 
-  # okay wait
-  # what if I put the sigil api and the server api here
-  # and then put the client and internal funcs here
-
   # =================================
-  #            Sigil API
+  #             API
   # =================================
 
-  def sigil_svg(string, []) do
-    string
-    |> path_to_seg()
-    |> segs_to_svg()
-    |> order_segs()
-    |> flatten_path()
+  # ------------
+  # To Do
+  # ------------
+  # -[] set up sigil_SVG string parsing
+  # -[] create user input filtering
+
+  # for direct string parsing
+  @spec sigil_SVG(String.t(), charlist()) :: Path.path() | String.t()
+  defmacro sigil_SVG(path, opts) do
+    quote do
+      # Path.make_path(unquote(path), unquote(opts))
+    end
+  end
+
+  # more obvious use
+  @spec svg(Path.path() | String.t(), [atom()]) :: Path.path() | String.t()
+  defmacro svg(path, opts \\ []) do
+    quote do
+      Path.make_path(unquote(path), unquote(opts))
+    end
   end
 
   # =================================
   #           Client API
   # =================================
 
-  # eventually will have to tie in composer api
+  # ------------
+  # To Do
+  # ------------
+  # -[] intialization
+  # -[] passing self to composer
+  # -[] id options
 
-  def make_svg(path) when is_binary(path) do
+  def add_svg(path) when is_binary(path) do
     GenServer.start_link(Path, path)
   end
 
@@ -34,5 +49,20 @@ defmodule SVG do
 
   def pop(pid) do
     GenServer.call(pid, :pop)
+  end
+
+  # =================================
+  #           Server API
+  # =================================
+
+  @impl true
+  def init(path) do
+    svg = Path.make_svg(path)
+    {:ok, svg}
+  end
+
+  @impl true
+  def handle_call(:pop, _from, svg) do
+    {:reply, svg}
   end
 end

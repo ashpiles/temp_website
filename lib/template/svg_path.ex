@@ -1,147 +1,280 @@
-defmodule SVG.Path do
-  use GenServer
-  defstruct path: "", segments: []
+defprotocol SVG.Path do
+  alias SVG.Path.Types, as: Types
+  Types.alias()
 
-  import SVG
-  # okay so instead of a struct we use a gen server
-  # and I can possibly wrap up the internal function opperations into sigils
-  # the indvidual segments can be structs which are traversed and edited via it's
-  # parent gen server
-  # and a supervisor
+  @doc """
+  All possible svg path types
+  """
+  @type t :: StdPath.t() | IndexedPath.t() | MappedPath.t()
 
-  # =================================
-  #        Internal Functions
-  # =================================
+  @doc """
+  Turns a string or existing svg path into a kind of svg path
+  """
+  @spec make_path(String.t() | t(), [any()]) :: t()
+  def make_path(path, opts)
 
-  # Intialize #
-  defp segs_to_svg(segments) do
-    [path: "", segments: segments]
-  end
+  @doc """
+  Concatonates two svg paths of the same type
+  """
+  @spec concat(t(), t()) :: t()
+  def concat(p1, p2)
 
-  defp path_to_seg(path) do
-    path
-    |> String.to_charlist()
-    |> glob_path(0)
-    |> List.flatten()
-  end
+  @doc """
+  Subtracts elements of a svg path from another of the same type
+  """
+  @spec subtract(t(), t()) :: t()
+  def subtract(p1, p2)
 
-  defp ascii_to_str(a) do
-    case a do
-      [] -> ""
-      _ -> List.to_string([a])
+  @doc """
+  Map a function to the segments of a svg path
+  """
+  @spec map(t(), (Seg.t() -> any())) :: t()
+  def map(path, fun)
+
+  @doc """
+  Flatten a svg path into a correctly formatted string
+  """
+  @spec flatten(t()) :: String.t()
+  def flatten(path)
+end
+
+defimpl SVG.Path, for: BitString do
+  alias SVG.Path.Utility, as: Utility
+
+  def make_path(path, opts) do
+    case opts do
+      :mapped -> Utility.string_to_mapped_path(path)
+      :indexed -> Utility.string_to_indexed_path(path)
+      :standard -> Utility.string_to_path(path)
+      _ -> Utility.string_to_path(path)
     end
   end
 
-  defp glob_path([], _), do: %{}
-
-  defp glob_path([h | t], index) when h in ~c"MLHVCSQTAZ" do
-    {numbers, rest} = grab_numbers(t)
-    key = ascii_to_str(h)
-
-    seg = [
-      %Seg{
-        type: key,
-        points:
-          numbers
-          |> String.split()
-          |> Enum.map(&String.to_integer/1),
-        index: index,
-        path: key <> numbers
-      }
-    ]
-
-    case rest do
-      [] ->
-        seg
-
-      _ ->
-        [seg | glob_path(rest, index + 1)]
-    end
+  def subtract(p1, p2) do
+    char_list1 = String.to_charlist(p1)
+    char_list2 = String.to_charlist(p2)
+    char_list1 -- char_list2
   end
 
-  defp glob_path([_ | t], index), do: glob_path(t, index)
-
-  defp grab_numbers([h | t]) when h in ~c"0123456789 -" do
-    {numbers, rest} = grab_numbers(t)
-    {ascii_to_str(h) <> numbers, rest}
+  def concat(p1, p2) do
+    char_list1 = String.to_charlist(p1)
+    char_list2 = String.to_charlist(p2)
+    char_list1 ++ char_list2
   end
 
-  defp grab_numbers(path = [h | _t]) when h in ~c"MLHVCSQTAZ", do: {"", path}
-  defp grab_numbers([]), do: {"", []}
-  defp grab_numbers([_h | t]), do: grab_numbers(t)
-
-  # Ordering by Index #
-  defp order_segs(svg) do
-    split_segs(svg.)
+  def map(path, fun) do
+    char_list = String.to_charlist(path)
+    Enum.map(char_list, fun)
   end
 
-  defp split_segs(segs = [l | r]) when length(segs) <= 2 do
-    if l.index < r.index,
-      do: [l | r],
-      else: [r | l]
-  end
-
-  defp split_segs(segs) do
-    step = (length(segs) / 2) |> round()
-    l = get_in(segs, [Access.filter(&(&1.index < step))])
-    r = get_in(segs, [Access.filter(&(&1.index >= step))])
-    [l | r]
-  end
-
-  # Setting Path #
-  defp flatten_path(svg = %Path{}) do
-    flat_path =
-      svg.segments
-      |> Enum.reduce([], fn element, acc ->
-        List.insert_at(acc, element.index, element.svg)
-      end)
-      |> Enum.reduce("", &(&2 <> &1))
-      |> String.trim_leading()
-
-    %SVG{segments: svg.segments, path: flat_path}
-  end
-
-  def add_joint_seg(index, angle) do
-  end
-
-  # =================================
-  #           Client API
-  # =================================
-
-  def make_svg(path) when is_binary(path) do
-    GenServer.start_link(__MODULE__, path)
-  end
-
-  def push(pid, path) do
-    GenServer.cast(pid, {:push, path})
-  end
-
-  def pop(pid) do
-    GenServer.call(pid, :pop)
-  end
-
-  # maybe popping and pushing specific segments as well
-  # I think i'll have a clearer picture on how to structure this
-  # after setting up the supervisor module
-  # then I can try and do a little animation set up
-
-  # =================================
-  #           Server API
-  # =================================
-
-  @impl true
-  def init(path) do
-    svg = order_segs(path)
-    {:ok, svg}
-  end
-
-  @impl true
-  def handle_call(:pop, _from, svg) do
-    {:reply, svg}
+  def flatten(path) do
+    String.trim(path)
   end
 end
 
-# can turn the name into a hash function for the supervisor
-# {:ok, pid} = GenServer.start_link(Path, "M0 5 Q 45 -5, 70 5 T 120 5 V15 H0 Z", name: MyPath)
+defimpl SVG.Path, for: StdPath do
+  alias SVG.Path.Utility, as: Utility
 
-# SVG.order_segs(svg)
+  # I need a way to match for the regular path and the tuple
+
+  def make_path(path, opts) do
+    case opts do
+      :mapped ->
+        path
+        |> Utility.path_to_string()
+        |> Utility.string_to_mapped_path()
+
+      :indexed ->
+        path
+        |> Utility.path_to_string()
+        |> Utility.string_to_indexed_path()
+
+      :standard ->
+        path
+
+      _ ->
+        path
+    end
+  end
+
+  def subtract(p1, p2) do
+    char_list1 =
+      p1
+      |> Utility.path_to_string()
+      |> String.to_charlist()
+
+    char_list2 =
+      p2
+      |> Utility.path_to_string()
+      |> String.to_charlist()
+
+    (char_list1 -- char_list2)
+    |> Utility.string_to_path()
+  end
+
+  def concat(p1, p2) do
+    char_list1 =
+      p1
+      |> Utility.path_to_string()
+      |> String.to_charlist()
+
+    char_list2 =
+      p2
+      |> Utility.path_to_string()
+      |> String.to_charlist()
+
+    (char_list1 ++ char_list2)
+    |> Utility.string_to_path()
+  end
+
+  def map(path, fun) do
+    char_list =
+      path
+      |> Utility.path_to_string()
+      |> String.to_charlist()
+
+    Enum.map(char_list, fun)
+  end
+
+  def flatten(path) do
+    path
+    |> Utility.path_to_string()
+  end
+end
+
+defimpl SVG.Path, for: IndexedPath do
+  alias SVG.Path.Utility, as: Utility
+
+  # I need a way to match for the regular path and the tuple
+
+  def make_path(path, opts) do
+    case opts do
+      :mapped ->
+        path
+        |> Utility.indexed_path_to_string()
+        |> Utility.string_to_mapped_path()
+
+      :indexed ->
+        path
+
+      :standard ->
+        path
+        |> Utility.indexed_path_to_string()
+        |> Utility.string_to_path()
+
+      _ ->
+        path
+        |> Utility.indexed_path_to_string()
+        |> Utility.string_to_path()
+    end
+  end
+
+  def subtract(p1, p2) do
+    char_list1 =
+      p1
+      |> Utility.indexed_path_to_string()
+      |> String.to_charlist()
+
+    char_list2 =
+      p2
+      |> Utility.indexed_path_to_string()
+      |> String.to_charlist()
+
+    (char_list1 -- char_list2)
+    |> Utility.string_to_indexed_path()
+  end
+
+  def concat(p1, p2) do
+    char_list1 =
+      p1
+      |> Utility.indexed_path_to_string()
+      |> String.to_charlist()
+
+    char_list2 =
+      p2
+      |> Utility.indexed_path_to_string()
+      |> String.to_charlist()
+
+    (char_list1 ++ char_list2)
+    |> Utility.string_to_indexed_path()
+  end
+
+  def map(path, fun) do
+    char_list =
+      path
+      |> Utility.indexed_path_to_string()
+      |> String.to_charlist()
+
+    Enum.map(char_list, fun)
+  end
+
+  def flatten(path) do
+    path
+    |> Utility.indexed_path_to_string()
+  end
+end
+
+# handles a hashed path
+defimpl SVG.Path, for: MappedPath do
+  alias SVG.Path.Utility, as: Utility
+
+  def make_path(path, opts) do
+    case opts do
+      :mapped ->
+        path
+
+      :indexed ->
+        path
+        |> Utility.mapped_path_to_string()
+        |> Utility.string_to_indexed_path()
+
+      _ ->
+        path
+        |> Utility.mapped_path_to_string()
+        |> Utility.string_to_path()
+    end
+  end
+
+  def subtract(p1, p2) do
+    char_list1 =
+      p1
+      |> Utility.mapped_path_to_string()
+      |> String.to_charlist()
+
+    char_list2 =
+      p2
+      |> Utility.mapped_path_to_string()
+      |> String.to_charlist()
+
+    (char_list1 -- char_list2)
+    |> Utility.string_to_mapped_path()
+  end
+
+  def concat(p1, p2) do
+    char_list1 =
+      p1
+      |> Utility.mapped_path_to_string()
+      |> String.to_charlist()
+
+    char_list2 =
+      p2
+      |> Utility.mapped_path_to_string()
+      |> String.to_charlist()
+
+    (char_list1 -- char_list2)
+    |> Utility.string_to_mapped_path()
+  end
+
+  def map(path, fun) do
+    char_list =
+      path
+      |> Utility.mapped_path_to_string()
+      |> String.to_charlist()
+
+    Enum.map(char_list, fun)
+  end
+
+  def flatten(path) do
+    Utility.mapped_path_to_string(path)
+  end
+end
