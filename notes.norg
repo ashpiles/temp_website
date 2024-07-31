@@ -1,0 +1,134 @@
+MVP:
+- Define the problem
+- Minimum set of features
+- Target audience
+
+MLP:
+- Start with functionality
+- avoid to many features
+- define lovability
+
+The MVP and MLP serve different purposes
+MVP focuses on basic function and feedback
+MLP aims to be delightful from the start
+
+MVP is ideal ofr situations with limited time and budget
+MLP is suitable when aiming for exception
+
+MVP involves defining user problems, minimal features, targets
+MLP requires focusing on functionality not solving problems
+
+-----------------
+
+## MVP
+*Problem*
+Clients need a common page for their poteintal clients for:
+- advertisment
+- sales
+*Minimum set of features*
+- Static web page
+- links to socials
+- contact info
+- editability
+*Target Audience*
+Entrepaneurs
+
+## MLP
+*Functionality*
+Hub for clients, page for doing buisness
+*Features*
+- user accounts
+- Sales portal
+- scheduling
+- Animations
+*Define Lovability*
+- Reactive and pretty website
+------
+
+### ToDo
+_legend_
+- []: to do item
+- [x]: finished to do item
+- %%: notes on a to do item
+- ->: to do task
+- ->>: to do project
+
+
+->> MVP Website with Elixir & Pheonix
+
+-> Routing
+[] Research
+[] Test for holes
+
+-> General
+[] Make better color themes
+[] Figure out how to design the shading
+%maybe I should flatten the design and sharpen the edges?
+that seems to be the common design choice now, keep things minimal while
+doing things in a sharp, flat, and layered way.%
+
+-> Header
+[] Create navbar
+[] Set up nav breadcrumbs to fold into a hamburger
+
+-> First Panel
+[] Work with the design
+[] Make the image extend past the set bounds
+[] Make image
+
+-> Card Carsoul
+[] Move into a phx template
+[] Create hooks for adding faces
+[] Hook in google api for pasting in live reviews
+[] Include link to review
+
+-> FAQ
+[] Ask client for QA style things to add
+[] Work on the design
+[] Consider it's location
+%this might be better suited for the bottom of the page as a hamburger%
+
+-> Google Map hook in
+[] Attatch to google map api
+[] Show availble homes for scheduling a cleaning
+
+
+->> MVP Website with Elixir & Pheonix
+
+-> Functionality
+[] Complete MVP to do list
+[] Focus in on responsiveness
+[] Adjust html for all screens instead of just common screen sizes
+[] Add Dark Modes
+
+-> Add Accounts
+%A non traditional approach of saving a browser cache might be better so
+the client does not pay for a data base, just the costs of serving the app%
+%Might be best to avoid this so that client does not have to worry over the risks
+and costs involved with a db. Client is hoping more of a set and forget solution%
+
+-> Sales Portal
+[] Connect to paypal api
+[] Have preset sale with user and client set up
+[] Ensure no user information is being saved server side
+[] Create series of tests to ensure safety and security
+
+-> Scheduling
+[] Provide a scheduling forum
+[] Consider putting this right bellow the top page item
+%this is would really be the core function of the app if added and
+deserves to be higher up on the page%
+[] Send a text msg/ email with users info to client to follow up with
+scheduling
+
+-> Animations
+[] Make sponge svg
+[] Make sponge animation
+%something simple and basic using a js library like anim%
+%the animation will be the sponge wiping across the screen%
+[] Make bubble svgs
+[] Make bubble trails for sponge animation
+[] Make pop animation for bubbles
+%this would all be somewhat complex but procedural animation and managing
+animation state is very much in my wheel house as a game dev%
+%fun to work on but the least necassary%

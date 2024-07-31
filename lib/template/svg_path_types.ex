@@ -1,14 +1,3 @@
-defmodule SVG.Path.Types do
-  def alias do
-    quote do
-      alias unquote(SVG.Path.Seg), as: unquote(Seg)
-      alias unquote(SVG.Path.StdPath), as: unquote(StdPath)
-      alias unquote(SVG.Path.IndexedPath), as: unquote(IndexedPath)
-      alias unquote(SVG.Path.MappedPath), as: unquote(MappedPath)
-    end
-  end
-end
-
 defmodule SVG.Path.Seg do
   @type t :: %__MODULE__{
           command: String.t(),

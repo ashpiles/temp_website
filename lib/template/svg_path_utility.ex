@@ -1,6 +1,5 @@
 defmodule SVG.Path.Utility do
-  alias SVG.Path.Types, as: Types
-  Types.alias()
+  alias SVG.Path.Seg, as: Seg
 
   # Refractor Utility Module
   # ========================
@@ -24,7 +23,7 @@ defmodule SVG.Path.Utility do
       points =
         Enum.reduce(element.points, "", &(&2 <> Integer.to_string(&1) <> " "))
 
-      acc <> element.type <> " " <> points
+      acc <> element.command <> " " <> points
     end)
     |> String.trim()
   end
@@ -50,7 +49,7 @@ defmodule SVG.Path.Utility do
     string
     |> path_to_seg()
     |> Enum.reduce(%{}, fn element, acc ->
-      Map.merge(acc, %{"#{element.seg.type}-#{element.index}" => element.seg})
+      Map.merge(acc, %{"#{element.seg.command}-#{element.index}" => element.seg})
     end)
   end
 
@@ -88,7 +87,7 @@ defmodule SVG.Path.Utility do
     seg = [
       %{
         seg: %Seg{
-          type: key,
+          command: key,
           points:
             numbers
             |> String.split()

@@ -1,6 +1,5 @@
 defprotocol SVG.Path do
-  alias SVG.Path.Types, as: Types
-  Types.alias()
+  alias SVG.Path.Seg, as: Seg
 
   @doc """
   All possible svg path types
