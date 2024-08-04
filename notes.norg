@@ -85,7 +85,7 @@ doing things in a sharp, flat, and layered way.%
 -> FAQ
 [] Ask client for QA style things to add
 [] Work on the design
-[] Consider it's location
+[x] Consider it's location
 %this might be better suited for the bottom of the page as a hamburger%
 
 -> Google Map hook in
@@ -93,7 +93,7 @@ doing things in a sharp, flat, and layered way.%
 [] Show availble homes for scheduling a cleaning
 
 
-->> MVP Website with Elixir & Pheonix
+->> MLP Website with Elixir & Pheonix
 
 -> Functionality
 [] Complete MVP to do list

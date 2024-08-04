@@ -15,6 +15,7 @@ module.exports = {
     extend: {
       colors: {
         brand: "#FD4F00",
+        "my_bg": "#C5F0CC",
         "my_yellow": "#FEF19C",
         "my_green": "#95E6A3",
         "my_blue": "#106DD6",
