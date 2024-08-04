@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="../dist/styles.css" />
+    <!--script type="module" src="../dist/app.js"></script-->
+    <!--encrypt key-->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=ENTERKEY&loading=async&libraries=maps&v=beta"
+      defer
+    >
+    </script>
+    <title>Ingreds House Cleaning Services</title>
+  </head>
+  <body>
+    <div class="bg-my_bg">
+      <div class="container text-center bg-my_green m-auto grid md:grid-cols-12 gap-1">
+        <div class="col-span-2"></div>
+        <div class="col-span-10 max-w-lg mx-auto">
+          <img
+            class="w-full mx-h-64 bg-transparent object-contain"
+            src="/images/ICSIcon.svg"
+            alt="display"
+          />
+        </div>
+        <!-- contact section -->
+        <div class="col-span-12 mx-auto container p-4 bg-green-300 mt-8">
+          <div class="grid grid-cols-4 gap-4">
+            <div class="col-span-3 bg-white p-4">
+              <gmp-map
+                center="37.4220656,-122.0840897"
+                zoom="10"
+                map-id="DEMO_MAP_ID"
+                style="height: 400px"
+              >
+              </gmp-map>
+            </div>
+            <div class="col-span-1 bg-gray p-4">
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, deserunt voluptatem! Consequuntur, voluptatibus neque? Natus accusantium doloremque saepe sint, nulla consectetur architecto magnam facere, minima debitis quo esse consequatur dolorem!
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- Hamburger FAQ Section -->
+        <div class="col-span-12 flex flex-col space-y-4">
+          <!-- Heading -->
+          <div class="text-2xl font-bold mb-4">FAQ</div>
+          <!-- FAQ Item 1 -->
+          <div class="bg-my_green rounded-md p-4">
+            <button onclick="toggleFaq('faq1')" class="w-full text-left">
+              <h3 class="text-xl font-semibold">What is Lorem Ipsum?</h3>
+            </button>
+            <div id="faq1" class="hidden mt-2">
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, inventore aliquid? Quos ut, nobis sapiente, blanditiis incidunt qui eaque cum consectetur excepturi impedit quis esse necessitatibus numquam iusto aspernatur odio!
+              </p>
+            </div>
+          </div>
+          <!-- FAQ Item 2 -->
+          <div class="bg-my_green rounded-md p-4">
+            <button onclick="toggleFaq('faq2')" class="w-full text-left">
+              <h3 class="text-xl font-semibold">Why do we use it?</h3>
+            </button>
+            <div id="faq2" class="hidden mt-2">
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui ea, vero iste natus laborum minima dolore repellendus necessitatibus, provident tempore ipsa quia. Doloribus, laboriosam at. Animi ipsa voluptatum architecto ipsam?
+              </p>
+            </div>
+          </div>
+          <!-- FAQ Item 3 -->
+          <div class="bg-my_green rounded-md p-4">
+            <button onclick="toggleFaq('faq3')" class="w-full text-left">
+              <h3 class="text-xl font-semibold">Where does it come from?</h3>
+            </button>
+            <div id="faq3" class="hidden mt-2">
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam consequatur repellat totam unde natus porro sit sapiente quam, a quibusdam hic officia inventore qui, cum similique eaque quae provident eius.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-span-12 flex justify-center"></div>
+        <div class="col-span-12 bg-transparent"></div>
+        <div class="col-span-12">
+          <div class="bg-white flex justify-evenly">
+            <!-- the card will be a grid -->
+            <div class="flex-1 px-2 py-8">
+              <div class="rounded-lg shadow-2xl h-72 w-full
+              bg-my_yellow grid grid-rows-2 gap-4 content-normal">
+                <div class="flex flex-1 py-4 mx-4 rounded-lg self-center bg-white">1</div>
+                <div class="place-content-end self-end justify-self-end
+                ring-8 ring-my_green size-24 rounded-full shadow-2xl bg-white">
+                </div>
+              </div>
+            </div>
+            <!-- the card will be a grid -->
+            <div class="max-[520px]:hidden flex-1 px-2 py-8 hover:grow ">
+              <div class="rounded-lg shadow-2xl h-72 w-full
+              bg-my_yellow grid grid-rows-2 gap-4 content-normal">
+                <div class="flex flex-1 py-4 mx-4 rounded-lg self-center bg-white">1</div>
+                <div class="place-content-end self-end justify-self-end
+                ring-8 ring-my_green
+                size-24 rounded-full shadow-2xl bg-white">
+                </div>
+              </div>
+            </div>
+            <!-- the card will be a grid -->
+            <div class="max-md:hidden flex-1 px-2 py-8 hover:grow ">
+              <div class="rounded-lg shadow-2xl h-72 w-full
+              bg-my_yellow grid grid-rows-2 gap-4 content-normal">
+                <div class="flex flex-1 py-4 mx-4 rounded-lg self-center bg-white">1</div>
+                <div class="place-content-end self-end justify-self-end
+                ring-8 ring-green-500 size-24 rounded-full shadow-2xl bg-white">
+                </div>
+              </div>
+            </div>
+            <!-- the card will be a grid -->
+            <div class="max-lg:hidden flex-1 px-2 py-8 hover:grow ">
+              <div class="rounded-lg shadow-2xl h-72 w-full
+              bg-my_yellow grid grid-rows-2 gap-4 content-normal">
+                <div class="flex flex-1 py-4 mx-4 rounded-lg self-center bg-white">1</div>
+                <div class="place-content-end self-end justify-self-end
+                ring-8 ring-green-500 size-24 rounded-full shadow-2xl bg-white">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-span-12 bg-white my-8">
+          t
+        </div>
+        <div>footing</div>
+      </div>
+    </div>
+  </body>
+</html>
